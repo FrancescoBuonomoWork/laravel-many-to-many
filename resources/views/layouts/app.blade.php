@@ -35,6 +35,7 @@
                     </div>
                     {{-- config('app.name', 'Laravel') --}}
                 </a>
+                
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -47,6 +48,11 @@
                             <a class="nav-link" href="{{url('/') }}">{{ __('Home') }}</a>
                         </li>
                     </ul>
+
+                    <div>
+                        
+                        <a class="btn btn-success my-4" href="{{route('admin.project.index')}}">Vedi progetti</a>
+                    </div>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">

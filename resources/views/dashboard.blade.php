@@ -20,7 +20,7 @@
                     {{ __('You are logged in!') }}
                     <div>
                         
-                        <a class="btn btn-success my-4" href="admin/project">Vedi progetti</a>
+                        <a class="btn btn-success my-4" href="{{route('admin.project.index')}}">Vedi progetti</a>
                     </div>
                 </div>
             </div>
