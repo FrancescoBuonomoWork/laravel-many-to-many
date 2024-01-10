@@ -17,7 +17,14 @@
                                 <ul>
                                     {{-- <li>{{$project->name}}</li> --}}
                                     <li>{{isset($project->type) ? $project->type->name : '-'}}</li>
-                                 
+                                    <li>
+                                        <ul>
+                                            @foreach ($project->technologies as $technology)
+                        
+                                                <li class="badge rounded-pill text-bg-primary">{{$technology->name }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </li>
                                
                                     <li><a class="btn btn-sm btn-primary" href="{{route('admin.project.edit',$project)}}">Edit</a></li>
 
