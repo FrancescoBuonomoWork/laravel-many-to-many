@@ -47,12 +47,7 @@ class ProjectController extends Controller
         // dd($request->technologies);
         $new_project = Project::create($request->all());
         if ($request->has('technologies')) {
-           foreach ($request->technologies as $technologies) {
-
-               $new_project->technologies()->attach($technologies);
-           }
-                
-             
+            $new_project->technologies()->attach($request->get('technologies'));
         } else{
             $new_project->technologies()->detach(0);
         }
@@ -76,7 +71,8 @@ class ProjectController extends Controller
     {
 
         $types = Type::all();
-        return view('admin.project.edit', compact('project', 'types'));
+        $technologies = Technology::all();
+        return view('admin.project.edit', compact('project', 'types','technologies'));
     }
 
     /**
@@ -92,6 +88,13 @@ class ProjectController extends Controller
         ]));
         */
         $project->update($request->validated());
+        // dd($request->technologies);
+        if ($request->has('technologies')) {
+                $project->technologies()->sync($request->get('technologies'));      
+         } else{
+            $project->technologies()->detach();
+         }
+
         return redirect()->route('admin.project.show', $project->id);
     }
 
