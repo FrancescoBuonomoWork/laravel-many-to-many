@@ -26,6 +26,7 @@ class UpdateProjectRequest extends FormRequest
         return [
             'name' => ['required','max:150','string'],
             'type_id' => 'nullable|exists:types,id',
+            'technologies.*' => 'exists:technologies,id'
         ];
     }
 }
