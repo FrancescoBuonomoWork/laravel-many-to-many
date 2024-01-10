@@ -9,6 +9,7 @@ use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule as ValidationRule;
 use App\Models\Type;
+use App\Models\Technology;
 
 class ProjectController extends Controller
 {
@@ -18,7 +19,7 @@ class ProjectController extends Controller
     public function index()
     {
         $projects = Project::all();
-        return view('admin.project.index',compact('projects'));
+        return view('admin.project.index', compact('projects'));
     }
 
     /**
@@ -28,7 +29,8 @@ class ProjectController extends Controller
     {
 
         $types = Type::all();
-        return view('admin.project.create',compact('types'));
+        $technologies = Technology::all();
+        return view('admin.project.create', compact('types', 'technologies'));
     }
 
     /**
@@ -36,16 +38,26 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+
+        $valid = $request->validate([
             'name' => 'required|max:150|string|unique:projects',
-            'type_id' => 'nullable|exists:types,id'
-           
+            'type_id' => 'nullable|exists:types,id',
+            'technologies.*' => 'exists:technologies,id'
         ]);
-        $data = $request->all();
+        // dd($request->technologies);
+        $new_project = Project::create($request->all());
+        if ($request->has('technologies')) {
+           foreach ($request->technologies as $technologies) {
 
-        $new_project = Project::create($data);
+               $new_project->technologies()->attach($technologies);
+           }
+                
+             
+        } else{
+            $new_project->technologies()->detach(0);
+        }
 
-        return redirect()->route('admin.project.store',$new_project->id);
+        return redirect()->route('admin.project.store', $new_project->id);
     }
 
     /**
@@ -53,7 +65,8 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return view('admin.project.show',compact('project') );
+
+        return view('admin.project.show', compact('project'));
     }
 
     /**
@@ -63,7 +76,7 @@ class ProjectController extends Controller
     {
 
         $types = Type::all();
-        return view('admin.project.edit',compact('project','types'));
+        return view('admin.project.edit', compact('project', 'types'));
     }
 
     /**
