@@ -14,11 +14,11 @@
                 </div>
 
                 <div class="mb-3">
-                    <label for="types_id" class="form-label">Categories</label>
-                    <select name="types_id" class="form-control" id="types_id">
-                      <option>Seleziona una tipo</option>
+                    <label for="type_id" class="form-label">Tipo</label>
+                    <select name="type_id" class="form-control" id="type_id">
+                      <option value="">Seleziona una tipo</option>
                       @foreach($types as $type)
-                        <option @selected( old('types_id',optional($project->type)->id) ==  $type->id ) value="{{ $type->id }}">{{ $type->name }}</option>
+                        <option @selected( old('type_id',optional($project->type)->id) ==  $type->id ) value="{{ $type->id }}">{{ $type->name }}</option>
                       @endforeach
                     </select>
                 </div>

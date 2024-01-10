@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
@@ -36,7 +37,8 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255|string|unique:projects',
+            'name' => 'required|max:150|string|unique:projects',
+            'type_id' => 'nullable|exists:types,id'
            
         ]);
         $data = $request->all();
@@ -67,15 +69,16 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Project $project)
+    public function update(UpdateProjectRequest $request, Project $project)
     {
-        $request->validate([
+        /*
+        dd($request->validate([
             'name' => ['required','max:255','string',ValidationRule::unique('projects')->ignore($project->id)],
+            'type_id' => ['nullable|exists:types,id']
            
-        ]);
-        $data = $request->all();
-        
-        $project->update($data);
+        ]));
+        */
+        $project->update($request->validated());
         return redirect()->route('admin.project.show', $project->id);
     }
 
