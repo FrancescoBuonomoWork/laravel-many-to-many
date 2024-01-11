@@ -29,11 +29,15 @@
                           @foreach ($technologies as $technology)
                             <div class="form-check">
                               <input name="technologies[]" class="form-check-input" type="checkbox" value="{{$technology->id}}"
-          
-                              @checked(old('technologies[]', $technology->id))
+                              @checked(in_array($technology->id, old('technologies', $project->technologies->pluck('id')->all())))
                               id="technology-{{$technology->id}}">
-                              <!--{{ in_array($technology->id, $project->technologies->pluck('id')->toArray()) ? 'checked' : '' }}-->
-                              <!-- @checked( in_array($technology->id, old('technologies',[]) ) ) -->
+                              {{-- in_array() prende due paramentri e controlla che il primo é compreso nel secondo che deve essere un array obligatoriamente --}}
+                              {{-- old prende due parametre nel caso il form venga inviato prende il primo quindi in questo caso stesso dal form  --}}
+                              {{-- mentre come secondo parametro dobbiamo recuperare dal progetto le technologia tramite il id pluck() e poi il metodo all() lo trasforma in un array e viene accettato dal metodo in_array() --}}
+
+                              {{-- <!--{{ in_array($technology->id, $project->technologies->pluck('id')->toArray()) ? 'checked' : '' }}-->
+                              <!-- @checked( in_array($technology->id, old('technologies',[]) ) ) --> --}}
+                              {{-- @checked(old('technologies[]', $technology->id)) --}}
                               <label class="form-check-label" for="technology-{{$technology->id}}">
                                 {{ $technology->name }}
                               </label>
