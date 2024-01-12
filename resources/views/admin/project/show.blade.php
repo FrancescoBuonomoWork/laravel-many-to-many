@@ -7,6 +7,9 @@
         <div class="container">
             <div class="row">
                 <div class="col">
+                    @if($project->image)
+                    <img src="{{ asset('storage/' . $project->image)}}" >
+                    @endif
                     <ul>
                         <li>{{$project->name}}</li>
                         <li>{{isset($project->type) ? $project->type->name : '-'}}</li>

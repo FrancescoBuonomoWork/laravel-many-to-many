@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule as ValidationRule;
 use App\Models\Type;
 use App\Models\Technology;
@@ -38,14 +39,25 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-
         $valid = $request->validate([
             'name' => 'required|max:150|string|unique:projects',
             'type_id' => 'nullable|exists:types,id',
-            'technologies.*' => 'exists:technologies,id'
+            'technologies.*' => 'exists:technologies,id',
+            'image'=> 'nullable|image|max:255',
         ]);
+
+        $data = $request->all();
+
+        // logica per recuperare l immagine 
+        $imagePath = Storage::put('uploads', $request->image);
+
+        $data['image'] = $imagePath;
+
+        //fine lofica per recuperare l immagine
+
         // dd($request->technologies);
-        $new_project = Project::create($request->all());
+        $new_project = Project::create($data);
+
         if ($request->has('technologies')) {
             $new_project->technologies()->attach($request->get('technologies'));
         } else{
