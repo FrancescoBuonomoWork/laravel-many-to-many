@@ -92,6 +92,7 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
+        // salvo in una variabile data la request validata 
         $data = $request->validated();
         /*
         dd($request->validate([
@@ -101,18 +102,19 @@ class ProjectController extends Controller
         ]));
         */
         // logica per recuperare l immagine 
-        // @dd($imagePath);
-        // $project['image'] = $imagePath;
 
+        // se la richiesta ha il campo image entro nel primo if e se il project ha l immagine la cancello entrando nel secondo if 
+        
         if ($request->has('image')) {
             if ($project->image) {
                 Storage::delete($project->image);
             }
             // Salvo l'immagine
+            // e l aggiungo sia all data che poi viene aggiurnato nel databese sia nella cartella public con percorso uploads/image.jpg esempio
             $imagePath = Storage::put('uploads', $request->image);
             $data['image'] = $imagePath;
         }
-
+        // restituisco la variabile data alla update 
         $project->update($data);
         // $data['image'] = $imagePath;
 
