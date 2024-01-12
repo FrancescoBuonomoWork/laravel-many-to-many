@@ -43,7 +43,7 @@ class ProjectController extends Controller
             'name' => 'required|max:150|string|unique:projects',
             'type_id' => 'nullable|exists:types,id',
             'technologies.*' => 'exists:technologies,id',
-            'image'=> 'nullable|image|max:255',
+            'image' => 'nullable|image|max:255',
         ]);
 
         $data = $request->all();
@@ -60,7 +60,7 @@ class ProjectController extends Controller
 
         if ($request->has('technologies')) {
             $new_project->technologies()->attach($request->get('technologies'));
-        } else{
+        } else {
             $new_project->technologies()->detach(0);
         }
 
@@ -84,7 +84,7 @@ class ProjectController extends Controller
 
         $types = Type::all();
         $technologies = Technology::all();
-        return view('admin.project.edit', compact('project', 'types','technologies'));
+        return view('admin.project.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -92,6 +92,7 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
+        $data = $request->validated();
         /*
         dd($request->validate([
             'name' => ['required','max:255','string',ValidationRule::unique('projects')->ignore($project->id)],
@@ -99,13 +100,30 @@ class ProjectController extends Controller
            
         ]));
         */
-        $project->update($request->validated());
+        // logica per recuperare l immagine 
+        // @dd($imagePath);
+        // $project['image'] = $imagePath;
+
+        if ($request->has('image')) {
+            if ($project->image) {
+                Storage::delete($project->image);
+            }
+            // Salvo l'immagine
+            $imagePath = Storage::put('uploads', $request->image);
+            $data['image'] = $imagePath;
+        }
+
+        $project->update($data);
+        // $data['image'] = $imagePath;
+
+        //fine lofica per recuperare l immagine
+
         // dd($request->technologies);
         if ($request->has('technologies')) {
-                $project->technologies()->sync($request->get('technologies'));      
-         } else{
+            $project->technologies()->sync($request->get('technologies'));
+        } else {
             $project->technologies()->detach();
-         }
+        }
 
         return redirect()->route('admin.project.show', $project->id);
     }

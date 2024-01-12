@@ -4,13 +4,18 @@
 <div class="container">
     <div class="row">
         <div class="col">
-            <form action="{{route('admin.project.update',$project)}}" method="POST">
+            <form action="{{route('admin.project.update',$project)}}" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 
                 <div class="mb-3">
                     <label for="name" class="form-label">Nome progetto</label>
                     <input type="text" name="name" class="form-control" id="name" value="{{old('name',$project->name)}}">
+                </div>
+
+                <div class="mb-3">
+                  <label for="image">Image</label>
+                  <input type="file" name="image" class="form-control-file" id="image">
                 </div>
 
                 <div class="mb-3">
